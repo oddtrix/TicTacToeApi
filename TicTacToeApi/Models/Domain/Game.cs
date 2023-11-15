@@ -12,13 +12,7 @@ namespace TicTacToeApi.Models.Domain
 
         public Player Winner { get; set; }
 
-        public Guid PlayerId_1 { get; set; }
-
-        public Player Player_1 { get; set; }
-
-        public Guid PlayerId_2 { get; set; }
-
-        public Player Player_2 { get; set; }
+        public virtual ICollection<GamePlayerJunction> GamesPlayers { get; set; }
 
         public Guid ChatId { get; set; }
 

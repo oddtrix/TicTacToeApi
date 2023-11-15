@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
 
-        public Guid GameId { get; set; }
+        public FieldMoves FieldMoves { get; set; }
 
         public Game Game { get; set; }
     }

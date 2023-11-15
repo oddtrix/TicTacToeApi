@@ -8,14 +8,14 @@
 
         public string Email { get; set; }
 
-        public string Rating { get; set; }
+        public int Rating { get; set; }
 
         public string AvatarURL { get; set; }
 
-        public IEnumerable<Game> Games { get; set; }
+        public virtual ICollection<GamePlayerJunction> GamesPlayers { get; set; }
 
-        public IEnumerable<Message> Messages { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
 
-        public IEnumerable<Cell> Cells { get; set; }
+        public virtual ICollection<Cell> Cells { get; set; }
     }
 }
