@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Services;
+using Domain.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using TicTacToeApi.BusinessLayer.Interfaces;
-using TicTacToeApi.BusinessLayer.Services;
 using TicTacToeApi.Contexts;
 using TicTacToeApi.Models.AutoMapper;
-using TicTacToeApi.Models.Identity;
-using TicTacToeApi.Models.Repositories.PlayerRepos;
+using TicTacToeApi.Models.Repositories;
 
 namespace TicTacToeApi
 {
@@ -24,10 +24,11 @@ namespace TicTacToeApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             // Swagger
-
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" });
@@ -71,7 +72,6 @@ namespace TicTacToeApi
             });
 
             // Identity configuring
-
             services.AddIdentity<AppIdentityUser, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<AppIdentityContext>()
                 .AddDefaultTokenProviders();
@@ -121,7 +121,7 @@ namespace TicTacToeApi
 
             // DI
             services.AddScoped(typeof(IEntityRepository<>), typeof(EntityRepository<>));
-            services.AddScoped(typeof(IEntityService<,,>), typeof(EntityService<,,>));
+            services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IGameService, GameService>();
         }

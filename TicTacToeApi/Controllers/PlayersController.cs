@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using TicTacToeApi.BusinessLayer.Interfaces;
-using TicTacToeApi.Models.Domain;
-using TicTacToeApi.Models.DTOs.Player;
+﻿using ApplicationCore.Interfaces;
+using AutoMapper;
+using Domain.DTOs.Player;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace TicTacToeApi.Controllers
 {
@@ -10,10 +11,13 @@ namespace TicTacToeApi.Controllers
     [ApiController]
     public class PlayersController : ControllerBase
     {
-        private IEntityService<Player, PlayerCreateDTO, PlayerUpdateDTO> playerService;
+        public IMapper Mapper;
 
-        public PlayersController(IEntityService<Player, PlayerCreateDTO, PlayerUpdateDTO> playerService)
+        private IEntityService<Player> playerService;
+
+        public PlayersController(IEntityService<Player> playerService, IMapper Mapper)
         {
+            this.Mapper = Mapper;
             this.playerService = playerService;
         }
 
@@ -35,7 +39,8 @@ namespace TicTacToeApi.Controllers
         public IActionResult Update([FromBody] PlayerUpdateDTO playerUpdateDTO)
         {
             //var userId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var updatedPlayer = this.playerService.Update(playerUpdateDTO);
+            var player = this.Mapper.Map<Player>(playerUpdateDTO);
+            var updatedPlayer = this.playerService.Update(player);
             return Ok(updatedPlayer);
         }
 

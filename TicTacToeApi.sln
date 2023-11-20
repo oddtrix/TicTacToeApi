@@ -3,7 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeApi", "TicTacToeApi\TicTacToeApi.csproj", "{482D0DA7-6830-4190-8BA6-51613F4AE413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToeApi", "TicTacToeApi\TicTacToeApi.csproj", "{482D0DA7-6830-4190-8BA6-51613F4AE413}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34A64C08-CBEF-4461-9006-76266BF3B172} = {34A64C08-CBEF-4461-9006-76266BF3B172}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{F2175EDD-1589-4416-B4F5-380AF23F76DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore", "ApplicationCore\ApplicationCore.csproj", "{34A64C08-CBEF-4461-9006-76266BF3B172}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{069BFFAD-F334-4A5A-B162-281D5B79B528}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +24,18 @@ Global
 		{482D0DA7-6830-4190-8BA6-51613F4AE413}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{482D0DA7-6830-4190-8BA6-51613F4AE413}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{482D0DA7-6830-4190-8BA6-51613F4AE413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2175EDD-1589-4416-B4F5-380AF23F76DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2175EDD-1589-4416-B4F5-380AF23F76DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2175EDD-1589-4416-B4F5-380AF23F76DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2175EDD-1589-4416-B4F5-380AF23F76DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34A64C08-CBEF-4461-9006-76266BF3B172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34A64C08-CBEF-4461-9006-76266BF3B172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34A64C08-CBEF-4461-9006-76266BF3B172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34A64C08-CBEF-4461-9006-76266BF3B172}.Release|Any CPU.Build.0 = Release|Any CPU
+		{069BFFAD-F334-4A5A-B162-281D5B79B528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{069BFFAD-F334-4A5A-B162-281D5B79B528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{069BFFAD-F334-4A5A-B162-281D5B79B528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{069BFFAD-F334-4A5A-B162-281D5B79B528}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

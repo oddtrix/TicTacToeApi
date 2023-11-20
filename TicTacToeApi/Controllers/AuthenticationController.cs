@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApplicationCore.Interfaces;
+using AutoMapper;
+using Domain.DTOs.Authontication;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using TicTacToeApi.BusinessLayer.Interfaces;
-using TicTacToeApi.Models.DTOs.Authontication;
 
 namespace TicTacToeApi.Controllers
 {
@@ -9,10 +10,13 @@ namespace TicTacToeApi.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        public IMapper Mapper;
+
         private IAuthService authService;
 
-        public AuthenticationController(IAuthService authService)
+        public AuthenticationController(IAuthService authService, IMapper Mapper)
         {
+            this.Mapper = Mapper;
             this.authService = authService;
         }
 
