@@ -86,6 +86,8 @@ namespace TicTacToeApi
                 options.Password.RequiredUniqueChars = 0;
             });
 
+            services.AddSignalR();
+
             // JWT configuring
             services.AddAuthentication(auth =>
             {
@@ -124,6 +126,7 @@ namespace TicTacToeApi
             services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IPlayerService, PlayerService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment) 
@@ -134,6 +137,8 @@ namespace TicTacToeApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -146,7 +151,7 @@ namespace TicTacToeApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
+            });    
         }
     }
 }

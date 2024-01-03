@@ -20,6 +20,8 @@ namespace ApplicationCore.Interfaces
 
         void CreateGamePlayer(Guid gameId, Guid playerId);
 
+        IEnumerable<Game> GetOpenGames();
+
         Game CreateGame(Game game);
 
         void UpdateGameState(GameUpdateDTO updateDTO, Guid gameId, GameStatus gameStatus);

@@ -54,14 +54,14 @@ namespace ApplicationCore.Services
         public void CreateGamePlayer(Guid gameId, Guid playerId)
         {
             var player = this.playerRepository.GetById(playerId);
-            var gamePlayer = new GamePlayerJunction() { Id = Guid.NewGuid(), PlayerId = playerId, Player = player, GameId = gameId };
+            var gamePlayer = new GamePlayerJunction() { PlayerId = playerId, Player = player, GameId = gameId };
             gamePlayerRepository.Create(gamePlayer);
         }
 
         public Game JoinToGame(Guid playerId, Game game)
         {
             var playerToAdd = this.playerRepository.GetById(playerId);
-            var gamePlayer = new GamePlayerJunction() { Id = Guid.NewGuid(), PlayerId = playerId, Player = playerToAdd, GameId = game.Id };
+            var gamePlayer = new GamePlayerJunction() { PlayerId = playerId, Player = playerToAdd, GameId = game.Id };
             if (game.GamesPlayers.Count() < 2)
             {
                 game.GamesPlayers.Add(gamePlayer);
@@ -108,6 +108,12 @@ namespace ApplicationCore.Services
             game.GameStatus = GameStatus.Canceled;
             this.gameRepository.Update(game);
             return game;
+        }
+
+        public IEnumerable<Game> GetOpenGames()
+        {
+            var games = this.gameRepository.GetAll().Where(g => g.GameStatus == GameStatus.Pending);
+            return games;
         }
     }
 }

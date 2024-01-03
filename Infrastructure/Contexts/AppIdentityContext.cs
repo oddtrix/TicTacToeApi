@@ -1,7 +1,9 @@
-﻿using Domain.Identity;
+﻿using Domain.Entities;
+using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TicTacToeApi.Models.EntityConfiguration;
 
 namespace TicTacToeApi.Contexts
 {
@@ -12,7 +14,7 @@ namespace TicTacToeApi.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppIdentityUserEntityConfiguration).Assembly);
             SeedRoles(modelBuilder);
         }
 

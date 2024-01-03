@@ -50,11 +50,12 @@ namespace TicTacToeApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult JoinToGame(Guid gameId)
+        public IActionResult JoinToGame([FromBody] GameIdDTO gameIdDTO)
         {
             var userNameIdentifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString();
             var userId = Guid.Parse(userNameIdentifier);
 
+            var gameId = Guid.Parse(gameIdDTO.GameId.ToString());
             var game = this.gameService.FindGameById(gameId);
             this.gameService.JoinToGame(userId, game);
             return Ok(game);
@@ -72,6 +73,13 @@ namespace TicTacToeApi.Controllers
         {
             var game = this.gameService.CancelGame(gameId);
             return Ok(game);
+        }
+
+        [HttpGet]
+        public IActionResult GetOpenGames()
+        {
+            var games = this.gameService.GetOpenGames();
+            return Ok(games);
         }
     }
 }

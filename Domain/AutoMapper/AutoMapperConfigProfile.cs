@@ -24,9 +24,12 @@ namespace TicTacToeApi.Models.AutoMapper
 
             CreateMap<GameUpdateDTO, Game>();
 
+            CreateMap<GameIdDTO, Guid>();
+
             CreateMap<ChatCreateDTO, Chat>();
 
             CreateMap<Chat, ChatCreateDTO>();
+
         }
     }
 }

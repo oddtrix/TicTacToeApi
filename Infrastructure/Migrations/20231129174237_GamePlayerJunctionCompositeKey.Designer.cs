@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicTacToeApi.Contexts;
 
@@ -11,9 +12,10 @@ using TicTacToeApi.Contexts;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDomainContext))]
-    partial class AppDomainContextModelSnapshot : ModelSnapshot
+    [Migration("20231129174237_GamePlayerJunctionCompositeKey")]
+    partial class GamePlayerJunctionCompositeKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +54,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Cells", (string)null);
+                    b.ToTable("Cells");
                 });
 
             modelBuilder.Entity("Domain.Entities.Chat", b =>
@@ -63,7 +65,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chats", (string)null);
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Domain.Entities.Field", b =>
@@ -74,7 +76,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fields", (string)null);
+                    b.ToTable("Fields");
                 });
 
             modelBuilder.Entity("Domain.Entities.FieldMoves", b =>
@@ -91,7 +93,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("FieldId")
                         .IsUnique();
 
-                    b.ToTable("FieldMoves", (string)null);
+                    b.ToTable("FieldMoves");
                 });
 
             modelBuilder.Entity("Domain.Entities.Game", b =>
@@ -125,7 +127,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("WinnerId");
 
-                    b.ToTable("Games", (string)null);
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("Domain.Entities.GamePlayerJunction", b =>
@@ -140,7 +142,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("GamePlayers", (string)null);
+                    b.ToTable("GamePlayers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Message", b =>
@@ -167,7 +169,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Player", b =>
@@ -190,7 +192,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players", (string)null);
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("Domain.Entities.Cell", b =>
