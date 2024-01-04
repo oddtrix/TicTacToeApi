@@ -81,6 +81,12 @@ namespace ApplicationCore.Services
         public Game FindGameById(Guid gameId)
         {
             var game = this.gameRepository.GetByIdWithInclude(gameId, g => g.Chat, g => g.Field, g => g.GamesPlayers);
+
+            foreach (var gamesPlayer in game.GamesPlayers)
+            {
+                gamesPlayer.Player = this.playerRepository.GetById(gamesPlayer.PlayerId);
+            }
+
             return game;
         }
 

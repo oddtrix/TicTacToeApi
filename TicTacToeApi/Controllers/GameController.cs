@@ -5,7 +5,9 @@ using Domain.DTOs.Game;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using TicTacToeApi.Hubs;
 
 namespace TicTacToeApi.Controllers
 {
@@ -18,16 +20,20 @@ namespace TicTacToeApi.Controllers
 
         private readonly IGameService gameService;
 
-        public GameController(IGameService gameService, IMapper Mapper) 
+        private readonly IHubContext<GameHub> _hubContext;
+
+        public GameController(IGameService gameService, IMapper Mapper, IHubContext<GameHub> hubContext) 
         {
             this.Mapper = Mapper;
             this.gameService = gameService;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
         public IActionResult GetGameById(Guid gameId)
         {
             var game = this.gameService.FindGameById(gameId);
+            _hubContext.Clients.Group(game.ToString()).SendAsync("ReceiveGameState", game);
             return Ok(game);
         }
 

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TicTacToeApi.Contexts;
+using TicTacToeApi.Hubs;
 using TicTacToeApi.Models.AutoMapper;
 using TicTacToeApi.Models.Repositories;
 
@@ -114,7 +115,7 @@ namespace TicTacToeApi
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                 });
             });
 
@@ -151,6 +152,7 @@ namespace TicTacToeApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<GameHub>("/game");
             });    
         }
     }
