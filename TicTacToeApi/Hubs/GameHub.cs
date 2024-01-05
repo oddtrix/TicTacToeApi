@@ -21,7 +21,7 @@ namespace TicTacToeApi.Hubs
 
         public async Task UpdateGameState(string gameId, Game newState)
         {
-            var serializedGameState = JsonSerializer.Serialize(newState);
+            var serializedGameState = Newtonsoft.Json.JsonConvert.SerializeObject(newState);
             await Clients.Group(gameId).SendAsync("ReceiveGameState", serializedGameState);
         }
     }
