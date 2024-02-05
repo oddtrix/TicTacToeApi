@@ -32,7 +32,7 @@ namespace ApplicationCore.Services
             game.ChatId = CreateChat();
             game.FieldId = CreateField();
             game.GameStatus = GameStatus.Pending;
-            game.isPrivate = false;
+            game.IsPrivate = false;
             gameRepository.Create(game);
             return game;
         }

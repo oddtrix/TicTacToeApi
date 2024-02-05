@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Identity;
+﻿using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +20,8 @@ namespace TicTacToeApi.Contexts
         private static void SeedRoles(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityRole<Guid>>().HasData(
-                new IdentityRole<Guid>() { Id = Guid.NewGuid(), Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
-                new IdentityRole<Guid>() { Id = Guid.NewGuid(), Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
+                    new IdentityRole<Guid>() { Id = Guid.NewGuid(), Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
+                    new IdentityRole<Guid>() { Id = Guid.NewGuid(), Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
                 );
         }
     }

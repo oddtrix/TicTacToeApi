@@ -4,9 +4,9 @@
     {
         public Guid Id { get; set; }
 
-        public string messageBody { get; set; }
+        public string MessageBody { get; set; }
 
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
         public Guid ChatId { get; set; }
 

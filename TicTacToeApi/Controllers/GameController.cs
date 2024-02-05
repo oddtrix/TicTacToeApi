@@ -33,7 +33,7 @@ namespace TicTacToeApi.Controllers
         public IActionResult GetGameById(Guid gameId)
         {
             var game = this.gameService.FindGameById(gameId);
-            _hubContext.Clients.Group(game.ToString()).SendAsync("ReceiveGameState", game);
+            //_hubContext.Clients.Group(game.ToString()).SendAsync("ReceiveGameState", game);
             return Ok(game);
         }
 

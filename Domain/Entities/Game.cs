@@ -8,7 +8,7 @@ namespace Domain.Entities
 
         public GameStatus GameStatus { get; set; }
 
-        public bool isPrivate { get; set; }
+        public bool IsPrivate { get; set; }
 
         public Player Winner { get; set; }
 
