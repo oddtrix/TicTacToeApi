@@ -6,11 +6,11 @@ using System.Security.Claims;
 
 namespace TicTacToeApi.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
+    [Route("api/[controller]/[action]")]
     public class AuthenticationController : ControllerBase
     {
-        public IMapper Mapper;
+        private readonly IMapper Mapper;
 
         private IAuthService authService;
 

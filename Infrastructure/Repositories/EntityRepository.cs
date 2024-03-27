@@ -60,9 +60,16 @@ namespace TicTacToeApi.Models.Repositories
             return this.context.Find<TEntity>(id);
         }
 
-        public List<GamePlayerJunction> GetGamesByUserId(Guid userId)
+        public IEnumerable<TEntity> GetAllByIdWithInclude(Guid id, string propertyName, params Expression<Func<TEntity, object>>[] includes)
         {
-            return this.context.Set<GamePlayerJunction>().Include(g => g.Game).ThenInclude(w => w.Winner).Where(gp => gp.PlayerId == userId).ToList();  
+            var query = this.context.Set<TEntity>().AsQueryable();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query.Where(e => EF.Property<Guid>(e, propertyName) == id);
         }
 
         public TEntity GetByIdWithInclude(Guid id, params Expression<Func<TEntity, object>>[] includes)

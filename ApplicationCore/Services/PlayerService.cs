@@ -12,10 +12,15 @@ namespace ApplicationCore.Services
             this.gamePlayerRepository = gamePlayerRepository;
         }
 
-        public List<GamePlayerJunction> History(Guid userId)
+        public IEnumerable<GamePlayerJunction> History(Guid userId)
         {
-            var gamePlayer = this.gamePlayerRepository.GetGamesByUserId(userId); 
-            return gamePlayer;
+            var history = this.gamePlayerRepository.GetAllByIdWithInclude(userId, "PlayerId", g => g.Game.Winner);
+            foreach (var game in history)
+            {
+                game.Game.GamesPlayers = this.gamePlayerRepository.GetAllByIdWithInclude(game.GameId, "GameId", p => p.Player).ToList();
+            }
+            
+            return history;
         }
     }
 }

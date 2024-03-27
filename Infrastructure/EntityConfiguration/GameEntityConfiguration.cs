@@ -13,6 +13,8 @@ namespace TicTacToeApi.Models.EntityConfiguration
             builder.HasMany(g => g.GamesPlayers)
                 .WithOne(gp => gp.Game)
                 .HasForeignKey(gp => gp.GameId);
+
+            builder.Property(g => g.StrokeNumber).HasDefaultValue(0);
         }
     }
 }

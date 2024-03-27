@@ -1,6 +1,4 @@
-﻿using ApplicationCore.Enums;
-using Domain.DTOs.Game;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace ApplicationCore.Interfaces
 {
@@ -10,20 +8,22 @@ namespace ApplicationCore.Interfaces
 
         Guid CreateField();
 
+        Game SetDraw(Guid gameId);
+
+        Game CreateGame(Game game);
+
         Game CancelGame(Guid gameId);
 
         Game FindGameById(Guid gameId);
 
-        Game JoinToGame(Guid playerId, Game game);
+        IEnumerable<Game> GetOpenGames();
 
-        Game SetWinner(Guid winnerId, Guid loserId, Guid gameId);
+        Game JoinToGame(Guid playerId, Game game);
 
         void CreateGamePlayer(Guid gameId, Guid playerId);
 
-        IEnumerable<Game> GetOpenGames();
+        Game SetWinner(Guid winnerId, Guid loserId, Guid gameId);
 
-        Game CreateGame(Game game);
-
-        void UpdateGameState(GameUpdateDTO updateDTO, Guid gameId, GameStatus gameStatus);
+        Game MakeMove(Guid gameId, Guid fieldId, Guid fieldMovesId, Guid playerId, int index);
     }
 }

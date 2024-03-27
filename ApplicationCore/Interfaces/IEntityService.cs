@@ -1,22 +1,21 @@
-﻿using Domain.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace ApplicationCore.Interfaces
 {
     public interface IEntityService<TEntity> where TEntity : class
     {
-        IEnumerable<TEntity> GetAll();
+        void Delete(Guid id);
 
         TEntity GetById(Guid id);
 
-        TEntity GetByIdWithInclude(Guid id, params Expression<Func<TEntity, object>>[] includes);
-
-        List<GamePlayerJunction> GetGamesByUserId(Guid userId);
+        IEnumerable<TEntity> GetAll();
 
         TEntity Create(TEntity entity);
 
         TEntity Update(TEntity entity);
 
-        void Delete(Guid id);
+        TEntity GetByIdWithInclude(Guid id, params Expression<Func<TEntity, object>>[] includes);
+
+        IEnumerable<TEntity> GetAllByIdWithInclude(Guid id, string propertyName, params Expression<Func<TEntity, object>>[] includes);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using Domain.DTOs.Field;
 using Domain.DTOs.Game;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,29 +12,28 @@ using TicTacToeApi.Hubs;
 
 namespace TicTacToeApi.Controllers
 {
+    [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]/[action]")]
-    [ApiController]
     public class GameController : ControllerBase
     {
-        public IMapper Mapper;
+        private readonly IMapper Mapper;
 
         private readonly IGameService gameService;
 
-        private readonly IHubContext<GameHub> _hubContext;
+        private readonly IHubContext<GameHub> hubContext;
 
         public GameController(IGameService gameService, IMapper Mapper, IHubContext<GameHub> hubContext) 
         {
             this.Mapper = Mapper;
             this.gameService = gameService;
-            _hubContext = hubContext;
+            this.hubContext = hubContext;
         }
 
         [HttpGet]
         public IActionResult GetGameById(Guid gameId)
         {
             var game = this.gameService.FindGameById(gameId);
-            //_hubContext.Clients.Group(game.ToString()).SendAsync("ReceiveGameState", game);
             return Ok(game);
         }
 
@@ -47,9 +47,8 @@ namespace TicTacToeApi.Controllers
             this.gameService.CreateGame(game);
             this.gameService.CreateGamePlayer(game.Id, userId);
 
-            if (game.GamesPlayers.Count() == 1)
+            if (game.GamesPlayers.Count == 1)
             {
-                //this.gameService.UpdateGameState(new GameUpdateDTO(), game.Id, GameStatus.Pending);
                 game.GameStatus = GameStatus.Pending;
             }
             return Ok(game);
@@ -68,9 +67,25 @@ namespace TicTacToeApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetWinner(Guid winnerId, Guid loserId, Guid gameId)
+        public IActionResult MakeMove([FromBody] FieldUpdateDTO fieldUpdateDTO)
         {
-            var game = this.gameService.SetWinner(winnerId, loserId, gameId);
+            var game = this.gameService.MakeMove(fieldUpdateDTO.GameId, 
+                fieldUpdateDTO.FieldId, fieldUpdateDTO.FieldMovesId, 
+                fieldUpdateDTO.PlayerId, fieldUpdateDTO.index);
+            return Ok(game);
+        }
+
+        [HttpPost]
+        public IActionResult SetWinner([FromBody] SetWinnerDTO setWinnerDTO)
+        {
+            var game = this.gameService.SetWinner(setWinnerDTO.WinnerId, setWinnerDTO.LoserId, setWinnerDTO.GameId);
+            return Ok(game);
+        }
+
+        [HttpPost]
+        public IActionResult SetDraw([FromBody] GameIdDTO gameIdDTO)
+        {
+            var game = this.gameService.SetDraw(gameIdDTO.GameId);
             return Ok(game);
         }
 

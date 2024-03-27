@@ -31,16 +31,15 @@ namespace ApplicationCore.Services
             return entities;
         }
 
+        public IEnumerable<TEntity> GetAllByIdWithInclude(Guid id, string propertyName, params Expression<Func<TEntity, object>>[] includes)
+        {
+            return this.repository.GetAllByIdWithInclude(id, propertyName, includes);
+        }
+
         public TEntity GetById(Guid id)
         {
             var entity = this.repository.GetById(id);
             return entity;
-        }
-
-        public List<GamePlayerJunction> GetGamesByUserId(Guid userId)
-        {
-            var entities = this.repository.GetGamesByUserId(userId);
-            return entities;
         }
 
         public TEntity GetByIdWithInclude(Guid id, params Expression<Func<TEntity, object>>[] includes)

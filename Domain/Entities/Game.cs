@@ -21,5 +21,9 @@ namespace Domain.Entities
         public Guid FieldId { get; set; }
 
         public Field Field { get; set; }
+
+        public int StrokeNumber { get; set; }
+
+        public Guid PlayerQueueId { get; set; }
     }
 }

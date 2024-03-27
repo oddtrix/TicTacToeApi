@@ -8,7 +8,7 @@ namespace TicTacToeApi.Models.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<Cell> builder)
         {
-            builder.HasKey(c => c.Id);
+            builder.HasKey(c => new { c.Id, c.X, c.Y });
         }
     }
 }

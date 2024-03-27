@@ -89,7 +89,7 @@ namespace TicTacToeApi
                 options.Password.RequiredUniqueChars = 0;
             });
 
-            services.AddSignalR();
+            services.AddSignalR(r => r.MaximumReceiveMessageSize = 1024000);
 
             // JWT configuring
             services.AddAuthentication(auth =>

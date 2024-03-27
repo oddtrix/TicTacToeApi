@@ -4,6 +4,6 @@ namespace ApplicationCore.Interfaces
 {
     public interface IPlayerService
     {
-        List<GamePlayerJunction> History(Guid userId);
+        IEnumerable<GamePlayerJunction> History(Guid userId);
     }
 }

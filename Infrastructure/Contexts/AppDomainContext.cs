@@ -35,6 +35,7 @@ namespace TicTacToeApi.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Message).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Player).Assembly);
 
+            modelBuilder.Entity<Cell>().HasKey(c => new { c.Id, c.X, c.Y });
             modelBuilder.Entity<GamePlayerJunction>().HasKey(gp => new { gp.PlayerId, gp.GameId }); // ??
         }
     }

@@ -4,16 +4,15 @@ using Domain.DTOs.Player;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace TicTacToeApi.Controllers
 {
+    [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]/[action]")]
-    [ApiController]
     public class PlayersController : ControllerBase
     {
-        public IMapper Mapper;
+        private readonly IMapper Mapper;
 
         private readonly IPlayerService playerService;
 
@@ -43,7 +42,6 @@ namespace TicTacToeApi.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] PlayerUpdateDTO playerUpdateDTO)
         {
-            //var userId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var player = this.Mapper.Map<Player>(playerUpdateDTO);
             var updatedPlayer = this.entityService.Update(player);
             return Ok(updatedPlayer);
@@ -57,11 +55,10 @@ namespace TicTacToeApi.Controllers
         }
 
         [Authorize(Roles = "User,Admin")]
-        [HttpGet]
-        public IActionResult History()
+        [HttpGet("{id:guid}")]
+        public IActionResult History(Guid id)
         {
-            var userId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var game = this.playerService.History(userId);
+            var game = this.playerService.History(id);
             return Ok(game);
         }
     }

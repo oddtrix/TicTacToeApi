@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicTacToeApi.Contexts;
 
@@ -11,9 +12,10 @@ using TicTacToeApi.Contexts;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDomainContext))]
-    partial class AppDomainContextModelSnapshot : ModelSnapshot
+    [Migration("20240228212811_CellEntityIdChanged")]
+    partial class CellEntityIdChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,12 +112,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("PlayerQueueId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("StrokeNumber")
-                        .HasColumnType("int");
 
                     b.Property<Guid?>("WinnerId")
                         .HasColumnType("uniqueidentifier");
