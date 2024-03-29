@@ -4,6 +4,7 @@ using Domain.DTOs.Authontication;
 using Domain.DTOs.Services;
 using Domain.Entities;
 using Domain.Identity;
+using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,9 +16,9 @@ namespace ApplicationCore.Services
 {
     public class AuthService : IAuthService
     {
-        public IMapper Mapper;
+        private readonly IMapper Mapper;
 
-        public IEntityService<Player> PlayerService;
+        private readonly IUnitOfWork unitOfWork;
 
         public IConfiguration Configuration { get; }
 
@@ -31,14 +32,14 @@ namespace ApplicationCore.Services
             UserManager<AppIdentityUser> UserManager,
             SignInManager<AppIdentityUser> SignInManager,
             RoleManager<IdentityRole<Guid>> RoleManager,
-            IEntityService<Player> PlayerService,
+            IUnitOfWork unitOfWork,
             IMapper Mapper)
         {
             this.Configuration = Configuration;
             this.UserManager = UserManager;
             this.SignInManager = SignInManager;
             this.RoleManager = RoleManager;
-            this.PlayerService = PlayerService;
+            this.unitOfWork = unitOfWork;
             this.Mapper = Mapper;
 
         }
@@ -147,7 +148,8 @@ namespace ApplicationCore.Services
 
                 if (result.Succeeded)
                 {
-                    PlayerService.Create(newDomainUser);
+                    this.unitOfWork.PlayerRepository.Create(newDomainUser);
+                    this.unitOfWork.Save();
                 }
                 else
                 {

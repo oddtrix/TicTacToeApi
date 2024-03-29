@@ -6,7 +6,6 @@ namespace TicTacToeApi.Hubs
 {
     public class GameHub : Hub
     {
-//create new named group and throw players
         public async Task JoinGameGroup(string gameId, string name)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, gameId);

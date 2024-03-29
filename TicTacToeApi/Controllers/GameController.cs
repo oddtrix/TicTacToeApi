@@ -96,6 +96,13 @@ namespace TicTacToeApi.Controllers
             return Ok(game);
         }
 
+        /*[HttpPost]
+        public IActionResult SendMessage(Guid gameId)
+        {
+            var game = this.gameService.SendMessage(gameId);
+            return Ok(game);
+        }*/
+
         [HttpGet]
         public IActionResult GetOpenGames()
         {

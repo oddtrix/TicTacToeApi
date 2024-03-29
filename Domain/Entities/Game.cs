@@ -2,10 +2,8 @@
 
 namespace Domain.Entities
 {
-    public class Game
+    public class Game : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public GameStatus GameStatus { get; set; }
 
         public bool IsPrivate { get; set; }

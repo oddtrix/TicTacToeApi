@@ -2,10 +2,8 @@
 
 namespace Domain.Entities
 {
-    public class Cell
+    public class Cell : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public int X { get; set; }
 
         public int Y { get; set; }

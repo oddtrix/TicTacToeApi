@@ -16,26 +16,23 @@ namespace TicTacToeApi.Controllers
 
         private readonly IPlayerService playerService;
 
-        private readonly IEntityService<Player> entityService;
-
-        public PlayersController(IEntityService<Player> entityService, IMapper Mapper, IPlayerService playerService)
+        public PlayersController(IMapper Mapper, IPlayerService playerService)
         {
             this.Mapper = Mapper;
-            this.entityService = entityService;
             this.playerService = playerService;
         }
 
         [HttpGet] 
         public IActionResult GetAll()
         {
-            var players = this.entityService.GetAll();
+            var players = this.playerService.GetAll();
             return Ok(players);
         }
 
         [HttpGet("{id:guid}")]
         public IActionResult GetById(Guid id)
         {
-            var player = this.entityService.GetById(id);
+            var player = this.playerService.GetById(id);
             return Ok(player);
         }
 
@@ -43,14 +40,14 @@ namespace TicTacToeApi.Controllers
         public IActionResult Update([FromBody] PlayerUpdateDTO playerUpdateDTO)
         {
             var player = this.Mapper.Map<Player>(playerUpdateDTO);
-            var updatedPlayer = this.entityService.Update(player);
+            var updatedPlayer = this.playerService.Update(player);
             return Ok(updatedPlayer);
         }
 
         [HttpDelete]
         public IActionResult Delete(Guid id)
         {
-            this.entityService.Delete(id);
+            this.playerService.Delete(id);
             return Ok($"Player with id: {id} was deleted");
         }
 

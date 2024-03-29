@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using Domain.Entities;
+using System.Linq.Expressions;
 
-namespace TicTacToeApi.Models.Repositories
+namespace Infrastructure.Interfaces
 {
-    public interface IEntityRepository<TEntity>
+    public interface IRepository<TEntity> where TEntity : BaseEntity
     {
         void Delete(Guid id);
 

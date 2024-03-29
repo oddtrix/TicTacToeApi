@@ -1,9 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class Message
+    public class Message : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string MessageBody { get; set; }
 
         public DateTime DateTime { get; set; }

@@ -1,6 +1,10 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
+using Domain.Entities;
 using Domain.Identity;
+using Infrastructure.Contexts;
+using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +14,6 @@ using System.Text;
 using TicTacToeApi.Contexts;
 using TicTacToeApi.Hubs;
 using TicTacToeApi.Models.AutoMapper;
-using TicTacToeApi.Models.Repositories;
 
 namespace TicTacToeApi
 {
@@ -125,8 +128,17 @@ namespace TicTacToeApi
             services.AddAutoMapper(typeof(AutoMapperConfigProfile));
 
             // DI
-            services.AddScoped(typeof(IEntityRepository<>), typeof(EntityRepository<>));
-            services.AddScoped(typeof(IEntityService<>), typeof(EntityService<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<ICellRepository, CellRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IFieldRepository, FieldRepository>();
+            services.AddScoped<IPlayerRepository, PlayerRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IFieldMovesRepository, FieldMovesRepository>();
+            services.AddScoped<IGamePlayerJunctionRepository, GamePlayerJunctionRepository>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IPlayerService, PlayerService>();
@@ -155,6 +167,7 @@ namespace TicTacToeApi
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<GameHub>("/game");
+                endpoints.MapHub<ChatHub>("/chat");
             });    
         }
     }

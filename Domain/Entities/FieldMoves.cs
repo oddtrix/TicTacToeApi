@@ -1,9 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class FieldMoves
+    public class FieldMoves : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public Guid FieldId { get; set; }
 
         public Field Field { get; set; }
