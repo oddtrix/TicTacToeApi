@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.DTOs;
 using Domain.DTOs.Authontication;
 using Domain.DTOs.Chat;
 using Domain.DTOs.Game;
@@ -24,7 +25,7 @@ namespace TicTacToeApi.Models.AutoMapper
 
             CreateMap<GameUpdateDTO, Game>();
 
-            CreateMap<GameIdDTO, Guid>();
+            CreateMap<BaseDTO, Guid>();
 
             CreateMap<ChatCreateDTO, Chat>();
 

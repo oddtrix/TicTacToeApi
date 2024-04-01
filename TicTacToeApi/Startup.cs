@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
-using Domain.Entities;
 using Domain.Identity;
 using Infrastructure.Contexts;
 using Infrastructure.Interfaces;
@@ -92,7 +91,7 @@ namespace TicTacToeApi
                 options.Password.RequiredUniqueChars = 0;
             });
 
-            services.AddSignalR(r => r.MaximumReceiveMessageSize = 1024000);
+            services.AddSignalR(r => r.MaximumReceiveMessageSize = 5024000);
 
             // JWT configuring
             services.AddAuthentication(auth =>

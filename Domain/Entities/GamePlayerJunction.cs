@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public class GamePlayerJunction
+    public class GamePlayerJunction : BaseEntity
     {
         public Guid PlayerId { get; set; }
 

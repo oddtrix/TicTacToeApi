@@ -1,9 +1,7 @@
 ﻿namespace Domain.DTOs.Player
 {
-    public class PlayerCreateDTO
+    public class PlayerCreateDTO : BaseDTO
     {
-        public Guid Id { get; set; }
-
         public string UserName { get; set; }
 
         public string Email { get; set; }

@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using Domain.DTOs;
+using Domain.DTOs.Chat;
 using Domain.DTOs.Field;
 using Domain.DTOs.Game;
 using Domain.Entities;
@@ -21,19 +23,16 @@ namespace TicTacToeApi.Controllers
 
         private readonly IGameService gameService;
 
-        private readonly IHubContext<GameHub> hubContext;
-
-        public GameController(IGameService gameService, IMapper Mapper, IHubContext<GameHub> hubContext) 
+        public GameController(IGameService gameService, IMapper Mapper) 
         {
             this.Mapper = Mapper;
             this.gameService = gameService;
-            this.hubContext = hubContext;
         }
 
         [HttpGet]
         public IActionResult GetGameById(Guid gameId)
         {
-            var game = this.gameService.FindGameById(gameId);
+            var game = this.gameService.FindGameByIdWithInclude(gameId);
             return Ok(game);
         }
 
@@ -55,13 +54,13 @@ namespace TicTacToeApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult JoinToGame([FromBody] GameIdDTO gameIdDTO)
+        public IActionResult JoinToGame([FromBody] BaseDTO gameIdDTO)
         {
             var userNameIdentifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString();
             var userId = Guid.Parse(userNameIdentifier);
 
-            var gameId = Guid.Parse(gameIdDTO.GameId.ToString());
-            var game = this.gameService.FindGameById(gameId);
+            var gameId = Guid.Parse(gameIdDTO.Id.ToString());
+            var game = this.gameService.FindGameByIdWithInclude(gameId);
             this.gameService.JoinToGame(userId, game);
             return Ok(game);
         }
@@ -83,9 +82,9 @@ namespace TicTacToeApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetDraw([FromBody] GameIdDTO gameIdDTO)
+        public IActionResult SetDraw([FromBody] BaseDTO gameIdDTO)
         {
-            var game = this.gameService.SetDraw(gameIdDTO.GameId);
+            var game = this.gameService.SetDraw(gameIdDTO.Id);
             return Ok(game);
         }
 
@@ -96,12 +95,12 @@ namespace TicTacToeApi.Controllers
             return Ok(game);
         }
 
-        /*[HttpPost]
-        public IActionResult SendMessage(Guid gameId)
+        [HttpPost]
+        public IActionResult SendMessage([FromBody] MessageSendingDTO messageDTO)
         {
-            var game = this.gameService.SendMessage(gameId);
+            var game = this.gameService.SendMessage(messageDTO.Id, messageDTO.MessageBody, messageDTO.ChatId, messageDTO.PlayerId);
             return Ok(game);
-        }*/
+        }
 
         [HttpGet]
         public IActionResult GetOpenGames()

@@ -1,7 +1,6 @@
 ﻿namespace Domain.DTOs.Chat
 {
-    public class ChatUpdateDTO
+    public class ChatUpdateDTO : BaseDTO
     {
-        public Guid Id { get; set; }
     }
 }
