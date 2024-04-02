@@ -140,6 +140,9 @@ namespace TicTacToeApi
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IFieldService, FieldService>();
+
             services.AddScoped<IPlayerService, PlayerService>();
         }
 
@@ -166,7 +169,6 @@ namespace TicTacToeApi
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<GameHub>("/game");
-                endpoints.MapHub<ChatHub>("/chat");
             });    
         }
     }

@@ -9,19 +9,25 @@ namespace ApplicationCore.Services
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public GameService(IUnitOfWork unitOfWork)
+        private readonly IChatService chatService;
+
+        private readonly IFieldService fieldService;
+
+        public GameService(IUnitOfWork unitOfWork, IChatService chatService, IFieldService fieldService)
         {
             this.unitOfWork = unitOfWork;
+            this.chatService = chatService;
+            this.fieldService = fieldService;
         }
 
         public Game CreateGame(Game game)
         {
-            game.ChatId = this.CreateChat();
+            game.ChatId = this.chatService.CreateChat();
 
-            game.FieldId = this.CreateField();
+            game.FieldId = this.fieldService.CreateField();
             var field = this.unitOfWork.FieldRepository.GetById(game.FieldId);
             game.Field = field;
-            var fieldMovesId = this.CreateFieldMoves(game.FieldId);
+            var fieldMovesId = this.fieldService.CreateFieldMoves(game.FieldId);
             var fieldMoves = this.unitOfWork.FieldMovesRepository.GetById(fieldMovesId);
             game.Field.FieldMoves = fieldMoves;
             fieldMoves.FieldId = game.FieldId;
@@ -32,76 +38,6 @@ namespace ApplicationCore.Services
 
             this.unitOfWork.Save();
             return game;
-        }
-
-        public Guid CreateChat()
-        {
-            var chat = new Chat() { Id = Guid.NewGuid() };
-            this.unitOfWork.ChatRepository.Create(chat);
-            this.unitOfWork.Save();
-            return chat.Id;
-        }
-
-        public Guid CreateMessage(string messageBody, Guid chatId, Guid playerId)
-        {
-            var message = new Message() 
-            { 
-                Id = Guid.NewGuid(), 
-                MessageBody = messageBody, 
-                ChatId = chatId, 
-                PlayerId = playerId, 
-                DateTime = DateTime.Now
-            };
-            this.unitOfWork.MessageRepository.Create(message);
-            this.unitOfWork.Save();
-            return message.Id;
-        }
-
-        public Guid CreateField()
-        {
-            var field = new Field() { Id = Guid.NewGuid() };
-            this.unitOfWork.FieldRepository.Create(field);
-            this.unitOfWork.Save();
-            return field.Id;
-        }
-
-        public Guid CreateFieldMoves(Guid fieldId)
-        {
-            var fieldMoves = new FieldMoves() { Id = Guid.NewGuid() };
-            fieldMoves.FieldId = fieldId;
-            this.unitOfWork.FieldMovesRepository.Create(fieldMoves);
-            this.unitOfWork.Save();
-            return fieldMoves.Id;
-        }
-
-        public Guid CreateCell(Guid gameid, Guid fieldId, Guid fieldMovesId, Guid playerId, int index)
-        {
-            var game = this.unitOfWork.GameRepository.GetById(gameid);
-            var cell = new Cell() { Id = Guid.NewGuid(), FieldId = fieldId, PlayerId = playerId };
-            var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(fieldMovesId, f => f.Cells);
-            fieldMoves.Cells.Add(cell);
-
-            var x = (index - 1) / 3;
-            var y = (index - 1) % 3;
-            cell.X = x; cell.Y = y;
-
-            var players = this.unitOfWork.GamePlayerRepository.GetAll().Where(p => p.GameId == gameid).ToArray();
-            if (game.StrokeNumber % 2 == 0)
-            {
-                game.PlayerQueueId = players[1].PlayerId;
-                cell.Value = CellState.X;
-            }
-            else 
-            {
-                game.PlayerQueueId = players[0].PlayerId;
-                cell.Value = CellState.O;
-            } 
-
-            game.StrokeNumber++;
-
-            this.unitOfWork.CellRepository.Create(cell);
-            this.unitOfWork.Save();
-            return cell.FieldId;
         }
 
         public void CreateGamePlayer(Guid gameId, Guid playerId)
@@ -136,22 +72,27 @@ namespace ApplicationCore.Services
 
         public Game MakeMove(Guid gameId, Guid fieldId, Guid fieldMovesId, Guid playerId, int index)
         {
-            this.CreateCell(gameId, fieldId, fieldMovesId, playerId, index);
+            this.fieldService.CreateCell(gameId, fieldId, fieldMovesId, playerId, index);
             var game = this.FindGameByIdWithInclude(gameId);
-            var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(fieldMovesId, f => f.Cells);
-            game.Field.FieldMoves = fieldMoves;
             this.unitOfWork.Save();
             return game;
         }
 
         public Game FindGameByIdWithInclude(Guid gameId)
         {
-            var game = this.unitOfWork.GameRepository.GetByIdWithInclude(gameId, g => g.Chat.Messages, g => g.Field.FieldMoves, g => g.GamesPlayers);
+            var game = this.unitOfWork.GameRepository.GetByIdWithInclude(
+                gameId, 
+                g => g.Chat.Messages, 
+                g => g.Field.FieldMoves, 
+                g => g.GamesPlayers);
 
             foreach (var gamesPlayer in game.GamesPlayers)
             {
                 gamesPlayer.Player = this.unitOfWork.PlayerRepository.GetById(gamesPlayer.PlayerId);
             }
+
+            var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(game.Field.FieldMoves.Id, f => f.Cells);
+            game.Field.FieldMoves = fieldMoves;
 
             return game;
         }
@@ -159,13 +100,7 @@ namespace ApplicationCore.Services
         public Game SetDraw(Guid gameId)
         {
             var game = this.FindGameByIdWithInclude(gameId);
-            var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(game.Field.FieldMoves.Id, f => f.Cells);
-
-            game.Field.FieldMoves = fieldMoves;
             game.GameStatus = GameStatus.Completed;
-
-            this.unitOfWork.GameRepository.Update(game);
-
             this.unitOfWork.Save();
             return game;
         }
@@ -173,46 +108,43 @@ namespace ApplicationCore.Services
         public Game SetWinner(Guid winnerId, Guid loserId, Guid gameId)
         {
             var game = this.FindGameByIdWithInclude(gameId);
-            var winner = this.unitOfWork.PlayerRepository.GetById(winnerId);
-            var loser = this.unitOfWork.PlayerRepository.GetById(loserId);
-
-            var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(game.Field.FieldMoves.Id, f => f.Cells);
-
-            game.Field.FieldMoves = fieldMoves;
-            game.Winner = winner;
+            game.Winner = this.CalculateRating(winnerId, loserId);
             game.GameStatus = GameStatus.Completed;
-            winner.Rating += 10;
-            loser.Rating -= 10;
-
-            this.unitOfWork.PlayerRepository.Update(winner);
-            this.unitOfWork.PlayerRepository.Update(loser);
-            this.unitOfWork.GameRepository.Update(game);
-
             this.unitOfWork.Save();
             return game;
+        }
+
+        public Player CalculateRating(Guid winnerId, Guid loserId)
+        {
+            var winner = this.unitOfWork.PlayerRepository.GetById(winnerId);
+            var loser = this.unitOfWork.PlayerRepository.GetById(loserId);
+            winner.Rating += 10;
+            if (loser.Rating >= 10)
+            {
+                loser.Rating -= 10;
+            }
+
+            return winner;
         }
 
         public Game CancelGame(Guid gameId)
         {
             var game = this.unitOfWork.GameRepository.GetById(gameId);
             game.GameStatus = GameStatus.Canceled;
-            this.unitOfWork.GameRepository.Update(game);
             this.unitOfWork.Save();
             return game;
         }
 
         public IEnumerable<Game> GetOpenGames()
         {
-            var games = this.unitOfWork.GameRepository.GetAll().Where(g => g.GameStatus == GameStatus.Pending);
+            var games = this.unitOfWork.GameRepository.GetAll().Where(g => g.GameStatus == GameStatus.Pending).ToList();
             return games;
         }
 
         public Game SendMessage(Guid gameId, string messageBody, Guid chatId, Guid playerId)
         {
-            this.CreateMessage(messageBody, chatId, playerId);
+            this.chatService.CreateMessage(messageBody, chatId, playerId);
             var game = this.FindGameByIdWithInclude(gameId);
-            var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(game.Field.FieldMoves.Id, f => f.Cells);
-            game.Field.FieldMoves = fieldMoves;
             game.Chat.Messages = game.Chat.Messages.OrderBy(m => m.DateTime).ToList();
             return game;
         }

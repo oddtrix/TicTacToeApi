@@ -10,8 +10,6 @@ namespace Domain.Entities
 
         public Player Winner { get; set; }
 
-        public virtual ICollection<GamePlayerJunction> GamesPlayers { get; set; }
-
         public Guid ChatId { get; set; }
 
         public Chat Chat { get; set; }
@@ -23,5 +21,7 @@ namespace Domain.Entities
         public int StrokeNumber { get; set; }
 
         public Guid PlayerQueueId { get; set; }
+
+        public ICollection<GamePlayerJunction> GamesPlayers { get; set; }
     }
 }

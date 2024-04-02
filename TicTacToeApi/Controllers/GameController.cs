@@ -8,9 +8,7 @@ using Domain.DTOs.Game;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
-using TicTacToeApi.Hubs;
 
 namespace TicTacToeApi.Controllers
 {
@@ -19,13 +17,13 @@ namespace TicTacToeApi.Controllers
     [Route("api/[controller]/[action]")]
     public class GameController : ControllerBase
     {
-        private readonly IMapper Mapper;
+        private readonly IMapper mapper;
 
         private readonly IGameService gameService;
 
-        public GameController(IGameService gameService, IMapper Mapper) 
+        public GameController(IMapper mapper, IGameService gameService) 
         {
-            this.Mapper = Mapper;
+            this.mapper = mapper;
             this.gameService = gameService;
         }
 
@@ -42,7 +40,7 @@ namespace TicTacToeApi.Controllers
             var userNameIdentifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString();
             var userId = Guid.Parse(userNameIdentifier);
 
-            var game = this.Mapper.Map<Game>(createDTO);
+            var game = this.mapper.Map<Game>(createDTO);
             this.gameService.CreateGame(game);
             this.gameService.CreateGamePlayer(game.Id, userId);
 

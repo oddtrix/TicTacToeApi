@@ -4,6 +4,6 @@
     {
         public Game Game { get; set; }
 
-        public virtual ICollection<Message> Messages { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

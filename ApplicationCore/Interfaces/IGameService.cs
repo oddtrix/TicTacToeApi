@@ -4,10 +4,6 @@ namespace ApplicationCore.Interfaces
 {
     public interface IGameService
     {
-        Guid CreateChat();
-
-        Guid CreateField();
-
         Game SetDraw(Guid gameId);
 
         Game CreateGame(Game game);
