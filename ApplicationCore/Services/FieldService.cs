@@ -38,27 +38,33 @@ namespace ApplicationCore.Services
             var fieldMoves = this.unitOfWork.FieldMovesRepository.GetByIdWithInclude(fieldMovesId, f => f.Cells);
             fieldMoves.Cells.Add(cell);
 
-            var x = (index - 1) / 3;
-            var y = (index - 1) % 3;
+            var (x, y) = this.DefineCellCoordinates(index);
             cell.X = x; cell.Y = y;
 
-            var players = this.unitOfWork.GamePlayerRepository.GetAll().Where(p => p.GameId == gameid).ToArray();
+            var players = this.unitOfWork.GamePlayerRepository.GetAllByIdWithInclude(gameid, "GameId", p => p.Player).Select(p => p.Player).ToList();
+            game.PlayerQueueId = players.Single(p => p.Id != playerId).Id;
+
             if (game.StrokeNumber % 2 == 0)
             {
-                game.PlayerQueueId = players[1].PlayerId;
                 cell.Value = CellState.X;
             }
             else
             {
-                game.PlayerQueueId = players[0].PlayerId;
                 cell.Value = CellState.O;
             }
 
             game.StrokeNumber++;
-
             this.unitOfWork.CellRepository.Create(cell);
             this.unitOfWork.Save();
             return cell.FieldId;
+        }
+
+        public (int, int) DefineCellCoordinates(int index)
+        {
+            var x = (index - 1) / 3;
+            var y = (index - 1) % 3;
+
+            return (x, y);
         }
     }
 }
