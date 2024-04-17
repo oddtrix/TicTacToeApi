@@ -21,7 +21,7 @@ namespace TicTacToeApi.Controllers
 
         private readonly IGameService gameService;
 
-        public GameController(IMapper mapper, IGameService gameService) 
+        public GameController(IMapper mapper, IGameService gameService)
         {
             this.mapper = mapper;
             this.gameService = gameService;
@@ -41,7 +41,7 @@ namespace TicTacToeApi.Controllers
             var userId = Guid.Parse(userNameIdentifier);
 
             var game = this.mapper.Map<Game>(createDTO);
-            this.gameService.CreateGame(game);
+            this.gameService.CreateGame(game, userId);
             this.gameService.CreateGamePlayer(game.Id, userId);
 
             if (game.GamesPlayers.Count == 1)
@@ -66,8 +66,8 @@ namespace TicTacToeApi.Controllers
         [HttpPost]
         public IActionResult MakeMove([FromBody] FieldUpdateDTO fieldUpdateDTO)
         {
-            var game = this.gameService.MakeMove(fieldUpdateDTO.GameId, 
-                fieldUpdateDTO.FieldId, fieldUpdateDTO.FieldMovesId, 
+            var game = this.gameService.MakeMove(fieldUpdateDTO.GameId,
+                fieldUpdateDTO.FieldId, fieldUpdateDTO.FieldMovesId,
                 fieldUpdateDTO.PlayerId, fieldUpdateDTO.index);
             return Ok(game);
         }
@@ -82,7 +82,8 @@ namespace TicTacToeApi.Controllers
         [HttpPost]
         public IActionResult SetDraw([FromBody] BaseDTO gameIdDTO)
         {
-            var game = this.gameService.SetDraw(gameIdDTO.Id);
+            var gameId = Guid.Parse(gameIdDTO.Id.ToString());
+            var game = this.gameService.SetDraw(gameId);
             return Ok(game);
         }
 

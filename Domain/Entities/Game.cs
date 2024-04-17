@@ -22,6 +22,8 @@ namespace Domain.Entities
 
         public Guid PlayerQueueId { get; set; }
 
+        public Guid GameCreatorId { get; set; }
+
         public ICollection<GamePlayerJunction> GamesPlayers { get; set; }
     }
 }

@@ -20,8 +20,9 @@ namespace ApplicationCore.Services
             this.fieldService = fieldService;
         }
 
-        public Game CreateGame(Game game)
+        public Game CreateGame(Game game, Guid playerId)
         {
+            game.GameCreatorId = playerId;
             game.ChatId = this.chatService.CreateChat();
 
             game.FieldId = this.fieldService.CreateField();
@@ -35,8 +36,8 @@ namespace ApplicationCore.Services
             game.GameStatus = GameStatus.Pending;
             game.IsPrivate = false;
             this.unitOfWork.GameRepository.Create(game);
-
             this.unitOfWork.Save();
+
             return game;
         }
 

@@ -6,8 +6,6 @@ namespace ApplicationCore.Interfaces
     {
         Game SetDraw(Guid gameId);
 
-        Game CreateGame(Game game);
-
         Game CancelGame(Guid gameId);
 
         IEnumerable<Game> GetOpenGames();
@@ -15,6 +13,8 @@ namespace ApplicationCore.Interfaces
         Game FindGameByIdWithInclude(Guid gameId);
 
         Game JoinToGame(Guid playerId, Game game);
+
+        Game CreateGame(Game game, Guid playerId);
 
         void CreateGamePlayer(Guid gameId, Guid playerId);
 
