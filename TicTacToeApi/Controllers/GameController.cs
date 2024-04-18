@@ -73,21 +73,6 @@ namespace TicTacToeApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetWinner([FromBody] SetWinnerDTO setWinnerDTO)
-        {
-            var game = this.gameService.SetWinner(setWinnerDTO.WinnerId, setWinnerDTO.LoserId, setWinnerDTO.GameId);
-            return Ok(game);
-        }
-
-        [HttpPost]
-        public IActionResult SetDraw([FromBody] BaseDTO gameIdDTO)
-        {
-            var gameId = Guid.Parse(gameIdDTO.Id.ToString());
-            var game = this.gameService.SetDraw(gameId);
-            return Ok(game);
-        }
-
-        [HttpPost]
         public IActionResult CancelGame(Guid gameId)
         {
             var game = this.gameService.CancelGame(gameId);

@@ -75,7 +75,53 @@ namespace ApplicationCore.Services
         {
             this.fieldService.CreateCell(gameId, fieldId, fieldMovesId, playerId, index);
             var game = this.FindGameByIdWithInclude(gameId);
+            game = this.CheckWinner(game);
             this.unitOfWork.Save();
+            return game;
+        }
+
+        private void CheckLineForWinner(CellState[,] moves, CellState targetState, Game game)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                if ((moves[i, 0] == targetState && moves[i, 1] == targetState && moves[i, 2] == targetState) ||
+                    (moves[0, i] == targetState && moves[1, i] == targetState && moves[2, i] == targetState))
+                {
+                    var cell = game.Field.FieldMoves.Cells.FirstOrDefault(c => c.Value == targetState);
+                    var winnerId = cell.PlayerId;
+                    var loserId = game.GamesPlayers.First(gp => gp.PlayerId != winnerId).PlayerId;
+                    this.SetWinner(winnerId, loserId, game);
+                    return;
+                }
+            }
+
+            if ((moves[0, 0] == targetState && moves[1, 1] == targetState && moves[2, 2] == targetState) ||
+                (moves[0, 2] == targetState && moves[1, 1] == targetState && moves[2, 0] == targetState))
+            {
+                var cell = game.Field.FieldMoves.Cells.FirstOrDefault(c => c.Value == targetState);
+                var winnerId = cell.PlayerId;
+                var loserId = game.GamesPlayers.First(gp => gp.PlayerId != winnerId).PlayerId;
+                this.SetWinner(winnerId, loserId, game);
+                return;
+            }
+        }
+
+        private Game CheckWinner(Game game)
+        {
+            var moves = new CellState[3, 3];
+            foreach (var item in game.Field.FieldMoves.Cells)
+            {
+                moves[item.X, item.Y] = item.Value;
+            }
+
+            this.CheckLineForWinner(moves, CellState.X, game);
+            this.CheckLineForWinner(moves, CellState.O, game);
+
+            if (game.Winner == null && game.StrokeNumber == 9)
+            {
+                this.SetDraw(game);
+            }
+
             return game;
         }
 
@@ -98,21 +144,15 @@ namespace ApplicationCore.Services
             return game;
         }
 
-        public Game SetDraw(Guid gameId)
+        public void SetDraw(Game game)
         {
-            var game = this.FindGameByIdWithInclude(gameId);
             game.GameStatus = GameStatus.Completed;
-            this.unitOfWork.Save();
-            return game;
         }
 
-        public Game SetWinner(Guid winnerId, Guid loserId, Guid gameId)
+        public void SetWinner(Guid winnerId, Guid loserId, Game game)
         {
-            var game = this.FindGameByIdWithInclude(gameId);
             game.Winner = this.CalculateRating(winnerId, loserId);
             game.GameStatus = GameStatus.Completed;
-            this.unitOfWork.Save();
-            return game;
         }
 
         public Player CalculateRating(Guid winnerId, Guid loserId)

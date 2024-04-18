@@ -4,7 +4,7 @@ namespace ApplicationCore.Interfaces
 {
     public interface IGameService
     {
-        Game SetDraw(Guid gameId);
+        void SetDraw(Game game);
 
         Game CancelGame(Guid gameId);
 
@@ -18,7 +18,7 @@ namespace ApplicationCore.Interfaces
 
         void CreateGamePlayer(Guid gameId, Guid playerId);
 
-        Game SetWinner(Guid winnerId, Guid loserId, Guid gameId);
+        void SetWinner(Guid winnerId, Guid loserId, Game game);
 
         Game SendMessage(Guid gameId, string messageBody, Guid chatId, Guid playerId);
 
