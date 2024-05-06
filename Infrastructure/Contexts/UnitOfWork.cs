@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
 using TicTacToeApi.Contexts;
 
 namespace Infrastructure.Contexts
@@ -8,46 +9,145 @@ namespace Infrastructure.Contexts
     {
         private readonly AppDomainContext context;
 
-        public UnitOfWork(AppDomainContext context,
-            IGameRepository gameRepository,
-            ICellRepository cellRepository,
-            IChatRepository chatRepository,
-            IFieldRepository fieldRepository,
-            IPlayerRepository playerRepository,
-            IMessageRepository messageRepository,
-            IFieldMovesRepository fieldMovesRepository,
-            IGamePlayerJunctionRepository gamePlayerJunctionRepository)
+        private readonly AppIdentityContext identityContext;
+
+        private GenericRepository<Game> gameRepository;
+
+        private GenericRepository<Cell> cellRepository;
+
+        private GenericRepository<Chat> chatRepository;
+
+        private GenericRepository<Field> fieldRepository;
+
+        private GenericRepository<Player> playerRepository;
+
+        private GenericRepository<Message> messageRepository;
+
+        private GenericRepository<FieldMoves> fieldMovesRepository;
+
+        private GamePlayerJunctionRepository gamePlayerRepository;
+
+        public UnitOfWork(AppDomainContext context, AppIdentityContext identityContext)
         {
             this.context = context;
-            this.GameRepository = gameRepository;
-            this.CellRepository = cellRepository;
-            this.ChatRepository = chatRepository;
-            this.FieldRepository = fieldRepository;
-            this.PlayerRepository = playerRepository;
-            this.MessageRepository = messageRepository;
-            this.FieldMovesRepository = fieldMovesRepository;
-            this.GamePlayerRepository = gamePlayerJunctionRepository;
+            this.identityContext = identityContext;
         }
 
-        public IGameRepository GameRepository { get; set; }
+        public GenericRepository<Game> GameRepository
+        {
+            get
+            {
 
-        public ICellRepository CellRepository { get; set; }
+                if (this.gameRepository == null)
+                {
+                    this.gameRepository = new GenericRepository<Game>(this.context);
+                }
 
-        public IChatRepository ChatRepository { get; set; }
+                return gameRepository;
+            }
+        }
 
-        public IFieldRepository FieldRepository { get; set; }
+        public GenericRepository<Cell> CellRepository
+        {
+            get
+            {
 
-        public IPlayerRepository PlayerRepository { get; set; }
+                if (this.cellRepository == null)
+                {
+                    this.cellRepository = new GenericRepository<Cell>(this.context);
+                }
 
-        public IMessageRepository MessageRepository { get; set; }
+                return cellRepository;
+            }
+        }
 
-        public IFieldMovesRepository FieldMovesRepository { get; set; }
+        public GenericRepository<Chat> ChatRepository
+        {
+            get
+            {
 
-        public IGamePlayerJunctionRepository GamePlayerRepository { get; set; }
+                if (this.chatRepository == null)
+                {
+                    this.chatRepository = new GenericRepository<Chat>(this.context);
+                }
+
+                return chatRepository;
+            }
+        }
+
+        public GenericRepository<Field> FieldRepository
+        {
+            get
+            {
+
+                if (this.fieldRepository == null)
+                {
+                    this.fieldRepository = new GenericRepository<Field>(this.context);
+                }
+
+                return fieldRepository;
+            }
+        }
+
+        public GenericRepository<Player> PlayerRepository
+        {
+            get
+            {
+
+                if (this.playerRepository == null)
+                {
+                    this.playerRepository = new GenericRepository<Player>(this.context, this.identityContext);
+                }
+
+                return playerRepository;
+            }
+        }
+
+        public GenericRepository<Message> MessageRepository
+        {
+            get
+            {
+
+                if (this.messageRepository == null)
+                {
+                    this.messageRepository = new GenericRepository<Message>(this.context);
+                }
+
+                return messageRepository;
+            }
+        }
+
+        public GenericRepository<FieldMoves> FieldMovesRepository
+        {
+            get
+            {
+
+                if (this.fieldMovesRepository == null)
+                {
+                    this.fieldMovesRepository = new GenericRepository<FieldMoves>(this.context);
+                }
+
+                return fieldMovesRepository;
+            }
+        }
+
+        public GamePlayerJunctionRepository GamePlayerJunctionRepository
+        {
+            get
+            {
+
+                if (this.gamePlayerRepository == null)
+                {
+                    this.gamePlayerRepository = new GamePlayerJunctionRepository(this.context);
+                }
+
+                return gamePlayerRepository;
+            }
+        }
 
         public void Save()
         {
-            context.SaveChanges();
+            this.context.SaveChanges();
         }
     }
 }

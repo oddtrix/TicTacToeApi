@@ -38,9 +38,9 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public IQueryable<GamePlayerJunction> GetAll()
+        public IEnumerable<GamePlayerJunction> GetAll()
         {
-            return this.context.GamePlayers;
+            return this.context.GamePlayers.ToList();
         }
 
         public GamePlayerJunction GetById(Guid id)
@@ -84,9 +84,9 @@ namespace Infrastructure.Repositories
             return query.Where(e => EF.Property<Guid>(e, propertyName) == id);
         }
 
-        IEnumerable<GamePlayerJunction> IRepository<GamePlayerJunction>.GetAll()
+        public IQueryable<GamePlayerJunction> GetAllAsQueryable()
         {
-            return this.context.GamePlayers.ToList();
+            return this.context.GamePlayers;
         }
     }
 }

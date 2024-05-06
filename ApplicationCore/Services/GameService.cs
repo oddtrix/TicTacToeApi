@@ -45,7 +45,7 @@ namespace ApplicationCore.Services
         {
             var player = this.unitOfWork.PlayerRepository.GetById(playerId);
             var gamePlayer = new GamePlayerJunction() { PlayerId = playerId, Player = player, GameId = gameId };
-            this.unitOfWork.GamePlayerRepository.Create(gamePlayer);
+            this.unitOfWork.GamePlayerJunctionRepository.Create(gamePlayer);
             this.unitOfWork.Save();
         }
 
@@ -64,7 +64,7 @@ namespace ApplicationCore.Services
                 game.GamesPlayers.Add(gamePlayer);
                 game.GameStatus = GameStatus.Started;
                 
-                this.unitOfWork.GamePlayerRepository.Create(gamePlayer);
+                this.unitOfWork.GamePlayerJunctionRepository.Create(gamePlayer);
             }
 
             this.unitOfWork.Save();

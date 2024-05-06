@@ -129,13 +129,7 @@ namespace TicTacToeApi
             // DI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<ICellRepository, CellRepository>();
-            services.AddScoped<IChatRepository, ChatRepository>();
-            services.AddScoped<IFieldRepository, FieldRepository>();
-            services.AddScoped<IPlayerRepository, PlayerRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
-            services.AddScoped<IFieldMovesRepository, FieldMovesRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IGamePlayerJunctionRepository, GamePlayerJunctionRepository>();
 
             services.AddScoped<IAuthService, AuthService>();

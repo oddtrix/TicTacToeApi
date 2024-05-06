@@ -41,7 +41,7 @@ namespace ApplicationCore.Services
             var (x, y) = this.DefineCellCoordinates(index);
             cell.X = x; cell.Y = y;
 
-            var players = this.unitOfWork.GamePlayerRepository.GetAllByIdWithInclude(gameid, "GameId", p => p.Player).Select(p => p.Player).ToList();
+            var players = this.unitOfWork.GamePlayerJunctionRepository.GetAllByIdWithInclude(gameid, "GameId", p => p.Player).Select(p => p.Player).ToList();
             game.PlayerQueueId = players.Single(p => p.Id != playerId).Id;
 
             if (game.StrokeNumber % 2 == 0)

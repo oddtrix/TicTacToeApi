@@ -1,24 +1,25 @@
 ﻿using Domain.Entities;
+using Infrastructure.Repositories;
 
 namespace Infrastructure.Interfaces
 {
     public interface IUnitOfWork
     {
-        IGameRepository GameRepository { get; set; }
+        GenericRepository<Game> GameRepository { get; }
 
-        ICellRepository CellRepository { get; set; }
+        GenericRepository<Cell> CellRepository { get; }
 
-        IChatRepository ChatRepository { get; set; }
+        GenericRepository<Chat> ChatRepository { get; }
 
-        IFieldRepository FieldRepository { get; set; }
+        GenericRepository<Field> FieldRepository { get; }
 
-        IPlayerRepository PlayerRepository { get; set; }
+        GenericRepository<Player> PlayerRepository { get; }
 
-        IMessageRepository MessageRepository { get; set; }
+        GenericRepository<Message> MessageRepository { get; }
 
-        IFieldMovesRepository FieldMovesRepository { get; set; }
+        GenericRepository<FieldMoves> FieldMovesRepository { get; }
 
-        IGamePlayerJunctionRepository GamePlayerRepository { get; set; }
+        GamePlayerJunctionRepository GamePlayerJunctionRepository { get; }
 
         void Save();
     }

@@ -31,12 +31,12 @@ namespace ApplicationCore.Services
 
         public (IEnumerable<GamePlayerJunction>, int) History(Guid userId, int page, int pageSize)
         {
-            var count = this.unitOfWork.GamePlayerRepository.GetAllByIdWithInclude(userId, "PlayerId").Count();  
+            var count = this.unitOfWork.GamePlayerJunctionRepository.GetAllByIdWithInclude(userId, "PlayerId").Count();  
             var totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            var history = this.unitOfWork.GamePlayerRepository.GetAllByIdPaginationWithInclude(userId, "PlayerId", page, pageSize,  g => g.Game.Winner);
+            var history = this.unitOfWork.GamePlayerJunctionRepository.GetAllByIdPaginationWithInclude(userId, "PlayerId", page, pageSize,  g => g.Game.Winner);
             foreach (var game in history)
             {
-                game.Game.GamesPlayers = this.unitOfWork.GamePlayerRepository.GetAllByIdWithInclude(game.GameId, "GameId", p => p.Player).ToList();
+                game.Game.GamesPlayers = this.unitOfWork.GamePlayerJunctionRepository.GetAllByIdWithInclude(game.GameId, "GameId", p => p.Player).ToList();
             }
             
             return (history, totalPages);
