@@ -12,6 +12,6 @@ namespace ApplicationCore.Interfaces
 
         IEnumerable<Player> GetAll();
 
-        IEnumerable<GamePlayerJunction> History(Guid userId);
+        (IEnumerable<GamePlayerJunction>, int) History(Guid userId, int page, int pageSize);
     }
 }

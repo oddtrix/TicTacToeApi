@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using AutoMapper;
 using Domain.DTOs.Player;
+using Domain.DTOs.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -53,10 +54,17 @@ namespace TicTacToeApi.Controllers
 
         [Authorize(Roles = "User,Admin")]
         [HttpGet("{id:guid}")]
-        public IActionResult History(Guid id)
+        public IActionResult History(Guid id, int page = 1, int pageSize = 6)
         {
-            var game = this.playerService.History(id);
-            return Ok(game);
+            var (gameHistory, gameHistoryCount) = this.playerService.History(id, page, pageSize);
+            var dto = new PaginationDTO { 
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = gameHistoryCount,
+                Items = gameHistory 
+            };
+
+            return Ok(dto);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<GamePlayerJunction> GetAll()
+        public IQueryable<GamePlayerJunction> GetAll()
         {
             return this.context.GamePlayers;
         }
@@ -70,6 +70,23 @@ namespace Infrastructure.Repositories
             }
 
             return query.FirstOrDefault(e => EF.Property<Guid>(e, "Id") == id);
+        }
+
+        public IEnumerable<GamePlayerJunction> GetAllByIdPaginationWithInclude(Guid id, string propertyName, int page, int pageSize, params Expression<Func<GamePlayerJunction, object>>[] includes)
+        {
+            var query = this.context.GamePlayers.AsQueryable().Skip((page - 1) * pageSize).Take(pageSize);
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query.Where(e => EF.Property<Guid>(e, propertyName) == id);
+        }
+
+        IEnumerable<GamePlayerJunction> IRepository<GamePlayerJunction>.GetAll()
+        {
+            return this.context.GamePlayers.ToList();
         }
     }
 }
